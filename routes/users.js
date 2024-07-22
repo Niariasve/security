@@ -11,8 +11,9 @@ var models = initModels(sequelize);
 router.get('/', async function(req, res, next) {
 
   let usersCollection = await models.users.findAll({})
+  let rolesCollection = await models.roles.findAll({})
 
-  res.render('crud', {title: 'CRUD with users', usersArray: usersCollection});
+  res.render('crud', {title: 'CRUD with users', usersArray: usersCollection, rolesArray: rolesCollection});
 });
 
 router.post('/', async function(req, res) {
@@ -25,7 +26,8 @@ router.post('/', async function(req, res) {
     let hash = crypto.createHmac('sha512', salt).update(password).digest("base64");
     let passwordHash = salt + "$" + hash;
     let user = await models.users.create({ name: name, password: passwordHash});
-    res.redirect("http://www.google.com");
+    debug;
+    res.redirect("/users");
   } catch (error) {
     res.status(400).send(error);
   }
