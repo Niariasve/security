@@ -32,6 +32,14 @@ router.post('/login', async function(req, res) {
       let passwordHash = salt + "$" + hash;
 
       if (user.password === passwordHash) {
+        const options = {
+          expire: new Date(
+            Date.now() + (60 * 1000)
+          )
+        }
+
+        res.cookie("username", username, options)
+
         res.redirect("/users");
       } else {
         res.redirect("/");
@@ -40,6 +48,8 @@ router.post('/login', async function(req, res) {
       console.error(error);
       res.status(400).send(error);
     }
+  } else {
+    res.redirect('/');
   }
 })
 
