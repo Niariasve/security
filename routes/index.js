@@ -21,7 +21,10 @@ router.post('/login', async function(req, res) {
   let user = await models.users.findOne({
     where: {
       name: username
-    }
+    },
+    include: { all: true, nested: true },
+    raw: true,
+    nest: true
   })
   
   if (user != null) {
@@ -40,6 +43,10 @@ router.post('/login', async function(req, res) {
 
         res.cookie("username", username, options)
 
+        req.session.loggedin = true;
+        req.session.username = username;
+        req.session.role = user.users_roles.roles_idrole_role.name
+
         res.redirect("/users");
       } else {
         res.redirect("/");
@@ -51,6 +58,11 @@ router.post('/login', async function(req, res) {
   } else {
     res.redirect('/');
   }
+})
+
+router.get('/logout', function(req, res) {
+  req.session.destroy();
+  res.render('login');
 })
 
 module.exports = router;
