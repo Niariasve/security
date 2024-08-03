@@ -1,6 +1,6 @@
  /* Autorización */
 
- var authorizationSession = (req, res, next) => {
+var authorizationSession = (req, res, next) => {
     if(process.env.ALL_GRANTED.includes(req.session.role)) {
         return next()
     } else{
